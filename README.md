@@ -3,19 +3,19 @@
 A simplified, no-nonsense newsreader application for the Courier Journal and other Gannett-owned news sources.
 
 > **Note**
-> This repository is for a personal application that runs on a private home network. It intentionally omits critical components required for public use, as those would enable bypassing publisher paywalls. Those details will not be provided.
+> This repository is for a personal application that runs on my private home network. It intentionally omits critical components required for public use, as those would enable bypassing publisher paywalls. Those details will not be provided. I keep this repo public for educational purposes.
 
 ## Features
 
 - Built with Nuxt 4 for performance, portability, and ease of modification
 - Removes ads
 - Removes trackers
-- Clean lightbox based inline photo galleries (no more redirects to seperate pages just to view a gallery of images)
-- Eliminates distracting or unrelated embeds (e.g., newsletter signups, promotional blocks)
-- Option to permanently disable inline videos (often unrelated to article content)
-- Supports multiple feed sort options
+- Clean inline media consumption for photos, videos and galleries
+- Videos no longer autoplay with the option to remove them completely
+- Eliminates distracting, irrelevant or unrelated popups and embeds (e.g., newsletter signups, promotional blocks)
+- Supports multiple feed sort options to cater to how you consume news best
   - Newest
-  - Curated (site-defined order)
+  - Curated (site-defined order as the publication intended)
 
 ## Screenshots
 
@@ -41,7 +41,7 @@ Lightbox for quick and easy inline media consumption.
 
 [Many users](https://www.reddit.com/r/newsboat/comments/168vt8t/usatoday_and_all_other_gannettowned_newspapers/) were frustrated when Gannett quietly discontinued its RSS feeds. I was also [directly affected](https://github.com/jwhazel/news-reader). [Workarounds](https://mastogizmos.com/grog.html) were attempted, but so far nothing has come close.
 
-I have no problem paying to support strong local journalism. However, the current experience across Gannett websites is lackluster at best. Heavy [resource intensive advertising](https://x.com/paulcalvano/status/1000094333524201473), intrusive interstitials with [dark patterns](https://braedon.dev/2022/gannett-spoofing.html), unrelated videos that force autoplay, and overall poor UX make it unnecessarily hard to consume news.
+I have no problem paying to support strong local journalism. However, the current experience across Gannett websites is lackluster at best. Heavy [resource intensive advertising](https://x.com/paulcalvano/status/1000094333524201473), intrusive interstitials with [dark patterns](https://braedon.dev/2022/gannett-spoofing.html), unrelated videos that force autoplay, and overall poor UX make it unnecessarily difficult to consume news.
 
 This project is a personal solution to that problem—bring back the simple feed we enjoyed with RSS... but also wrap a lightweight easy to use interface around it.
 
