@@ -5,8 +5,6 @@ A simplified, no-nonsense newsreader application for the Courier Journal and oth
 > **Note**
 > This repository is for a personal application that runs on a private home network. It intentionally omits critical components required for public use, as those would enable bypassing publisher paywalls. Those details will not be provided.
 
----
-
 ## Features
 
 - Built with Nuxt 4 for performance, portability, and ease of modification
@@ -15,37 +13,41 @@ A simplified, no-nonsense newsreader application for the Courier Journal and oth
 - Clean lightbox based inline photo galleries (no more redirects to seperate pages just to view a gallery of images)
 - Eliminates distracting or unrelated embeds (e.g., newsletter signups, promotional blocks)
 - Option to permanently disable inline videos (often unrelated to article content)
-- Supports feed sorting by:
+- Supports multiple feed sort options
   - Newest
   - Curated (site-defined order)
-
----
 
 ## Screenshots
 
 ### Feed View
+
 Clean, chronological or curated feed with no ads or distractions.
 
-![Feed View](./docs/images/feed.png)
+![Feed View](./docs/images/feed.webp)
 
 ### Article View
-Distraction-free reading experience with optional video suppression.
 
-![Article View](./docs/images/article.png)
+Distraction-free reading experience.
 
----
+![Article View](./docs/images/article.webp)
+
+### Gallery View
+
+Lightbox for quick and easy inline media consumption.
+
+![Gallery View](./docs/images/gallery.webp)
 
 ## Impetus
 
-[Many users](https://www.reddit.com/r/newsboat/comments/168vt8t/usatoday_and_all_other_gannettowned_newspapers/) were frustrated when Gannett quietly discontinued its RSS feeds. I was also [directly affected](https://github.com/jwhazel/news-reader).
+[Many users](https://www.reddit.com/r/newsboat/comments/168vt8t/usatoday_and_all_other_gannettowned_newspapers/) were frustrated when Gannett quietly discontinued its RSS feeds. I was also [directly affected](https://github.com/jwhazel/news-reader). [Workarounds](https://mastogizmos.com/grog.html) were attempted, but so far nothing has come close.
 
-I’m willing to pay to support strong local journalism. However, the current experience across Gannett properties is difficult to use—heavy advertising, intrusive interstitials, unrelated autoplay videos, and overall poor UX make it unnecessarily hard consume news. Just pulling up a single article in Chrome can consume 2 GB's.
+I have no problem paying to support strong local journalism. However, the current experience across Gannett websites is lackluster at best. Heavy [resource intensive advertising](https://x.com/paulcalvano/status/1000094333524201473), intrusive interstitials with [dark patterns](https://braedon.dev/2022/gannett-spoofing.html), unrelated videos that force autoplay, and overall poor UX make it unnecessarily hard to consume news.
 
-This project is a personal solution to that problem—a lightweight way to consume local news.
+This project is a personal solution to that problem—bring back the simple feed we enjoyed with RSS... but also wrap a lightweight easy to use interface around it.
 
-To build it, I used [HTTP Toolkit](https://httptoolkit.com/) to inspect requests made by the official mobile app. The implementation closely mirrors those requests to leverage the same cached content so as to not place additional burden on their infrastructure.
+To build it, I used [HTTP Toolkit](https://httptoolkit.com/) to inspect requests made by the official mobile app. The implementation closely emulates those requests to leverage the same cached content so as to not place additional burden on their infrastructure.
 
----
+The idea is not to bypass any content protection schemes, but rather to make the content I'm already paying for more accessible.
 
 ## Setup
 
@@ -70,8 +72,6 @@ npm run dev
 
 The app will be available at [http://localhost:3000](http://localhost:3000).
 
----
-
 ### Production / Deployment
 
 Ensure Docker is installed, then run:
@@ -81,8 +81,6 @@ docker compose up --build
 ```
 
 This builds and runs the Nuxt application in a container.
-
----
 
 ## TODO
 
