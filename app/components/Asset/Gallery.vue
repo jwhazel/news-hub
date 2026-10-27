@@ -118,7 +118,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GalleryAssetData } from '~/server/api/utils/types'
+import type { GalleryAssetData } from '#shared/types'
 
 const props = defineProps<{ id: string; data: GalleryAssetData }>()
 

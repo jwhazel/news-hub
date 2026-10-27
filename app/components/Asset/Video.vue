@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import type { VideoAssetData } from '~/server/api/utils/types'
+import type { VideoAssetData } from '#shared/types'
 defineProps<{ data: VideoAssetData }>()
 const playing = ref(false)
 const { hideVideos } = usePreferences()

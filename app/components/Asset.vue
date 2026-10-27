@@ -4,6 +4,6 @@
 </template>
 
 <script setup lang="ts">
-import type { ArticleBodyItem } from '~/server/api/utils/types'
+import type { ArticleBodyItem } from '#shared/types'
 defineProps<{ item: ArticleBodyItem }>()
 </script>

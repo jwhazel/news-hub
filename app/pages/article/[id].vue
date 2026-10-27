@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Article } from '~/server/api/utils/types'
+import type { Article } from '#shared/types'
 
 const route = useRoute()
 const { id } = route.params

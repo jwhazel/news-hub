@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ImageAssetData } from '~/server/api/utils/types'
+import type { ImageAssetData } from '#shared/types'
 const props = defineProps<{ data: ImageAssetData }>()
 const isVertical = computed(() => props.data.orientation === 'vertical')
 </script>

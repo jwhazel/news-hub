@@ -17,7 +17,7 @@ import type {
   ResolvedAsset,
   ArticleCard,
   ArticleListResponse
-} from './types'
+} from '#shared/types'
 
 function removeClassAttributes(html: string): string {
   return html.replace(/\s+class\s*=\s*["'][^"']*["']/gi, '')

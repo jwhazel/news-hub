@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import type { OembedAssetData } from '~/server/api/utils/types'
+import type { OembedAssetData } from '#shared/types'
 
 const props = defineProps<{ data: OembedAssetData }>()
 const container = ref<HTMLElement | null>(null)

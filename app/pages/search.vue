@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ArticleCard, ArticleListResponse } from '~/server/api/utils/types'
+import type { ArticleCard, ArticleListResponse } from '#shared/types'
 
 const route = useRoute()
 const router = useRouter()

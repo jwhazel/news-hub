@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ArticleCard } from '~/server/api/utils/types'
+import type { ArticleCard } from '#shared/types'
 
 const props = defineProps<{ article: ArticleCard }>()
 

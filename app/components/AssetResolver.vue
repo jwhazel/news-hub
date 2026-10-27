@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ResolvedAsset } from '~/server/api/utils/types'
+import type { ResolvedAsset } from '#shared/types'
 
 const props = defineProps<{ id: string }>()
 const { data: asset, pending } = await useFetch<ResolvedAsset>(`/api/get-asset/${props.id}`)
