@@ -1,4 +1,4 @@
-import { buildImageUrl } from './image'
+import { buildFeaturedImageUrl, buildImageUrl } from './image'
 import type {
   RawArticle,
   RawBodyItem,
@@ -77,9 +77,7 @@ export function resolveAsset(id: string, raw: any): ResolvedAsset {
         assetType: 'oembed',
         id,
         data: {
-          html: raw.html ?? '',
-          oembedType: raw.oembedType ?? '',
-          providerName: raw.providerName ?? ''
+          html: raw.html ?? ''
         } satisfies OembedAssetData
       }
     }
@@ -114,29 +112,15 @@ function processBodyItems(bodyItems: RawBodyItem[]): ArticleBodyItem[] {
 function transformArticle(rawArticle: RawArticle): Article {
   const authors: ArticleAuthor[] =
     rawArticle.isBylineOverridden && rawArticle.bylineOverrideV2
-      ? [{ contributorId: '', byline: rawArticle.bylineOverrideV2, profileUrl: '' }]
-      : rawArticle.contributors.map((c) => ({
-          contributorId: c.contributor.id,
-          byline: c.contributor.byline,
-          profileUrl: c.contributor.profileUrl
-        }))
+      ? [{ byline: rawArticle.bylineOverrideV2 }]
+      : rawArticle.contributors.map((c) => ({ byline: c.contributor.byline }))
 
-  const ssts: ArticleSsts = {
-    section: rawArticle.ssts.section,
-    subsection: rawArticle.ssts.subsection,
-    topic: rawArticle.ssts.topic,
-    subtopic: rawArticle.ssts.subtopic
-  }
+  const ssts: ArticleSsts = { section: rawArticle.ssts.section }
 
-  const featuredImage: ArticleImage | undefined = rawArticle.links.photo
+  const featuredImage: ArticleImage | undefined = rawArticle.links.photo?.crops?.length
     ? {
         id: rawArticle.links.photoId,
-        crops: rawArticle.links.photo.crops
-          .filter((crop) => crop.name === '16_9' || crop.name === '4_3')
-          .map((crop) => ({
-            ...crop,
-            path: buildImageUrl(rawArticle.links.photo!.crops, 'horizontal', 'inline')
-          }))
+        path: buildFeaturedImageUrl(rawArticle.links.photo.crops)
       }
     : undefined
 
@@ -145,7 +129,6 @@ function transformArticle(rawArticle: RawArticle): Article {
     subHead: rawArticle.subHead,
     featuredImage,
     publishDate: rawArticle.initialPublishDate,
-    updateDate: rawArticle.updateDate,
     authors,
     ssts,
     body: processBodyItems(rawArticle.contentBody ?? [])
@@ -154,14 +137,7 @@ function transformArticle(rawArticle: RawArticle): Article {
 
 export function safeTransformArticle(rawData: unknown): Article | null {
   try {
-    const requiredFields = [
-      'id',
-      'headline',
-      'initialPublishDate',
-      'updateDate',
-      'contributors',
-      'ssts'
-    ]
+    const requiredFields = ['id', 'headline', 'initialPublishDate', 'contributors', 'ssts']
     const data = rawData as Record<string, unknown>
     if (!requiredFields.every((f) => f in data && data[f] !== undefined)) {
       console.error('Invalid article data: missing required fields')
@@ -176,11 +152,7 @@ export function safeTransformArticle(rawData: unknown): Article | null {
 
 export function transformArticleCard(raw: any): ArticleCard {
   const authors: ArticleAuthor[] = (raw.contributors ?? [])
-    .map((c: any) => ({
-      contributorId: c.contributorId,
-      byline: c.contributor?.byline ?? '',
-      profileUrl: c.contributor?.profileUrl ?? ''
-    }))
+    .map((c: any) => ({ byline: c.contributor?.byline ?? '' }))
     .filter((a: ArticleAuthor) => a.byline)
 
   return {
@@ -188,16 +160,10 @@ export function transformArticleCard(raw: any): ArticleCard {
     headline: raw.headline,
     promoBrief: raw.promoBrief ?? '',
     publishDate: raw.initialPublishDate,
-    updateDate: raw.updateDate,
-    ssts: {
-      section: raw.ssts?.section ?? '',
-      subsection: raw.ssts?.subsection ?? '',
-      topic: raw.ssts?.topic ?? '',
-      subtopic: raw.ssts?.subtopic ?? ''
-    },
+    ssts: { section: raw.ssts?.section ?? '' },
     authors,
     featuredImage: raw.links?.photo?.crops?.length
-      ? { path: buildImageUrl(raw.links.photo.crops) }
+      ? { path: buildFeaturedImageUrl(raw.links.photo.crops) }
       : undefined
   }
 }

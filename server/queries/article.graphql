@@ -1,0 +1,35 @@
+query Article($id: String!) {
+  asset(id: $id) {
+    id
+    headline
+    initialPublishDate
+    isBylineOverridden
+    bylineOverrideV2
+    contributors {
+      contributor {
+        byline
+      }
+    }
+    ssts {
+      section
+    }
+    links {
+      photoId
+      photo {
+        ... on image {
+          crops {
+            name
+            path
+          }
+        }
+      }
+    }
+    ... on text {
+      subHead
+      contentBody {
+        type
+        value
+      }
+    }
+  }
+}

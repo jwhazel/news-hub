@@ -1,3 +1,4 @@
+import searchQuery from '../queries/search.graphql'
 import { useGraphQL } from './utils/graphql'
 import { transformArticleCard } from './utils/schema'
 
@@ -12,7 +13,7 @@ export default defineEventHandler(async (event) => {
     return { articles: [], cursor: null, numResults: 0 }
   }
 
-  const params = JSON.stringify({
+  const parameters = JSON.stringify({
     query: q,
     size,
     site_codes: [sitecode],
@@ -20,34 +21,7 @@ export default defineEventHandler(async (event) => {
     ...(cursor ? { cursor } : {})
   })
 
-  const gqlQuery = `{
-    response: searchAssets(template: "asset_keyword_by_types", parameters: ${JSON.stringify(params)}) {
-      cursor
-      numResults
-      assets {
-        id
-        headline
-        type
-        initialPublishDate
-        updateDate
-        promoBrief
-        ssts { section subsection topic }
-        contributors {
-          ...on BaseContributors {
-            contributorId
-            contributor { byline profileUrl }
-          }
-        }
-        links {
-          photo {
-            ...on image { crops { name path width height } }
-          }
-        }
-      }
-    }
-  }`
-
-  const data = await useGraphQL(gqlQuery)
+  const data = await useGraphQL(searchQuery, { parameters })
   const response = data.response
 
   return {

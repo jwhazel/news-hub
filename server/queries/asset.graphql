@@ -1,0 +1,59 @@
+query Asset($id: String!) {
+  asset(id: $id) {
+    id
+    type
+    headline
+    ... on image {
+      crops {
+        name
+        path
+        width
+        height
+      }
+      orientation
+      caption
+      credit
+    }
+    ... on gallery {
+      title
+      links {
+        photo {
+          ... on image {
+            crops {
+              name
+              path
+            }
+          }
+        }
+        assets {
+          overrides {
+            caption
+          }
+          asset {
+            id
+            ... on image {
+              crops {
+                name
+                path
+                width
+                height
+              }
+              orientation
+              caption
+              credit
+              byline
+            }
+          }
+        }
+      }
+    }
+    ... on oembed {
+      html
+    }
+    ... on video {
+      title
+      thumbnail
+      hlsURL
+    }
+  }
+}

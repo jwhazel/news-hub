@@ -1,11 +1,21 @@
-async function useGraphQL(query: string) {
+import cardFields from '../../queries/card.graphql'
+
+async function useGraphQL(query: string, variables?: Record<string, unknown>) {
   const config = useRuntimeConfig()
   const endpoint = config.contentEndpoint as string
   const apiKey = config.contentApiKey as string
   const sitecode = config.sitecode as string
   const userAgent = config.userAgent as string
 
-  return fetch(`${endpoint}?query=${encodeURI(query)}`, {
+  // Shared fragments are only appended when the query uses them
+  const document = query.includes('...CardFields') ? `${query}\n${cardFields}` : query
+
+  let url = `${endpoint}?query=${encodeURIComponent(document)}`
+  if (variables) {
+    url += `&variables=${encodeURIComponent(JSON.stringify(variables))}`
+  }
+
+  return fetch(url, {
     method: 'GET',
     headers: {
       'Accept-Encoding': 'gzip, deflate, br',

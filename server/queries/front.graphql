@@ -1,0 +1,13 @@
+query Front($id: String!) {
+  front(id: $id) {
+    layoutModules {
+      moduleName
+      totalContents
+      contents {
+        asset {
+          ...CardFields
+        }
+      }
+    }
+  }
+}

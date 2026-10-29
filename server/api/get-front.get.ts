@@ -1,3 +1,4 @@
+import frontQuery from '../queries/front.graphql'
 import { useGraphQL } from './utils/graphql'
 import { transformArticleCard } from './utils/schema'
 
@@ -11,38 +12,7 @@ export default defineEventHandler(async (event) => {
 
   const frontId = `section-front_${sitecode}_${section ?? 'home'}`
 
-  const gqlQuery = `{
-    front(id: "${frontId}") {
-      layoutModules {
-        moduleName
-        totalContents
-        contents {
-          asset {
-            id
-            headline
-            type
-            initialPublishDate
-            updateDate
-            promoBrief
-            ssts { section subsection topic }
-            contributors {
-              ...on BaseContributors {
-                contributorId
-                contributor { byline profileUrl }
-              }
-            }
-            links {
-              photo {
-                ...on image { crops { name path width height } }
-              }
-            }
-          }
-        }
-      }
-    }
-  }`
-
-  const data = await useGraphQL(gqlQuery)
+  const data = await useGraphQL(frontQuery, { id: frontId })
   const front = data.front
 
   if (!front) {

@@ -16,6 +16,21 @@ export default defineNuxtConfig({
       { name: 'DM Sans', provider: 'google', weights: ['400', '500', '600'] }
     ]
   },
+  nitro: {
+    rollupConfig: {
+      plugins: [
+        // Import server/queries/*.graphql files as plain strings
+        {
+          name: 'graphql-string',
+          transform(code: string, id: string) {
+            if (id.endsWith('.graphql')) {
+              return { code: `export default ${JSON.stringify(code)}`, map: null }
+            }
+          }
+        }
+      ]
+    }
+  },
   routeRules: {
     '/api/get-article/**': { swr: 3600 },
     '/api/get-asset/**': { swr: 86400 }

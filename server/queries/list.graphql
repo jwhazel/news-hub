@@ -1,0 +1,23 @@
+query List(
+  $siteCodes: [String!]
+  $size: Int
+  $sections: [String!]
+  $subsections: [String!]
+  $cursor: String
+) {
+  searchAssetsBySSTS(
+    site_codes: $siteCodes
+    types: ["text"]
+    size: $size
+    sort_by_recent: true
+    sections: $sections
+    subsections: $subsections
+    cursor: $cursor
+  ) {
+    numResults
+    cursor
+    assets {
+      ...CardFields
+    }
+  }
+}

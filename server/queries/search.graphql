@@ -1,0 +1,9 @@
+query Search($parameters: JSONObjectString) {
+  response: searchAssets(template: "asset_keyword_by_types", parameters: $parameters) {
+    cursor
+    numResults
+    assets {
+      ...CardFields
+    }
+  }
+}

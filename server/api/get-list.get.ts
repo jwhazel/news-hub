@@ -1,3 +1,4 @@
+import listQuery from '../queries/list.graphql'
 import { useGraphQL } from './utils/graphql'
 import { transformArticleList } from './utils/schema'
 
@@ -10,42 +11,14 @@ export default defineEventHandler(async (event) => {
   const section = sanitize(query.section)
   const subsection = sanitize(query.subsection)
   const size = Math.min(Math.max(parseInt(String(query.size)) || 20, 1), 50)
-  const cursor = query.cursor ? String(query.cursor).replace(/"/g, '\\"') : null
+  const cursor = query.cursor ? String(query.cursor) : null
 
-  const gqlQuery = `{
-    searchAssetsBySSTS(
-      site_codes: ["${sitecode}"]
-      types: ["text"]
-      size: ${size}
-      sort_by_recent: true
-      ${section ? `sections: ["${section}"]` : ''}
-      ${subsection ? `subsections: ["${subsection}"]` : ''}
-      ${cursor ? `cursor: "${cursor}"` : ''}
-    ) {
-      numResults
-      cursor
-      assets {
-        id
-        headline
-        promoBrief
-        initialPublishDate
-        updateDate
-        ssts { section subsection topic }
-        contributors {
-          ...on BaseContributors {
-            contributorId
-            contributor { byline profileUrl }
-          }
-        }
-        links {
-          photo {
-            ...on image { crops { name path width height } }
-          }
-        }
-      }
-    }
-  }`
-
-  const data = await useGraphQL(gqlQuery)
+  const data = await useGraphQL(listQuery, {
+    siteCodes: [sitecode],
+    size,
+    sections: section ? [section] : undefined,
+    subsections: subsection ? [subsection] : undefined,
+    cursor: cursor ?? undefined
+  })
   return transformArticleList(data.searchAssetsBySSTS)
 })

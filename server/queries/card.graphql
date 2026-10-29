@@ -1,0 +1,29 @@
+fragment CardFields on Asset {
+  id
+  headline
+  type
+  initialPublishDate
+  promoBrief
+  ssts {
+    section
+  }
+  contributors {
+    ... on BaseContributors {
+      contributor {
+        byline
+      }
+    }
+  }
+  links {
+    photo {
+      ... on image {
+        crops {
+          name
+          path
+          width
+          height
+        }
+      }
+    }
+  }
+}
