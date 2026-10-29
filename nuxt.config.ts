@@ -33,6 +33,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/api/get-article/**': { swr: 3600 },
-    '/api/get-asset/**': { swr: 86400 }
+    '/api/get-asset/**': { swr: 86400 },
+    '/api/get-author/**': { swr: 600 }
   }
 })

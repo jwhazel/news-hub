@@ -12,12 +12,26 @@ function toMediaUrl(path: string, mediaBaseUrl: string): string {
  * Falls back to buildImageUrl when there is no 16_9 crop.
  */
 export function buildFeaturedImageUrl(crops: Crop[]): string {
+  return buildNamedCropUrl(crops, '16_9', 1320, 740) ?? buildImageUrl(crops)
+}
+
+/** Square author headshot from the 1_1 crop, sized for a 96px avatar at 2x. */
+export function buildAvatarUrl(crops: Crop[]): string {
+  return buildNamedCropUrl(crops, '1_1', 192, 192) ?? buildImageUrl(crops)
+}
+
+function buildNamedCropUrl(
+  crops: Crop[],
+  name: string,
+  width: number,
+  height: number
+): string | null {
   const { mediaBaseUrl } = useRuntimeConfig()
 
-  const crop = crops.find((c) => c.name === '16_9')
-  if (!crop?.path.includes('?crop=')) return buildImageUrl(crops)
+  const crop = crops.find((c) => c.name === name)
+  if (!crop?.path.includes('?crop=')) return null
 
-  return `${toMediaUrl(crop.path, mediaBaseUrl)}&width=1320&height=740&format=pjpg&auto=webp`
+  return `${toMediaUrl(crop.path, mediaBaseUrl)}&width=${width}&height=${height}&format=pjpg&auto=webp`
 }
 
 /**

@@ -10,7 +10,7 @@ export interface RawArticle {
   initialPublishDate: string
   isBylineOverridden: boolean
   bylineOverrideV2: string
-  contributors: Array<{ contributor: { byline: string } }>
+  contributors: Array<{ contributor: { id: string; byline: string } }>
   ssts: { section: string }
   links: {
     photoId: string
@@ -76,6 +76,8 @@ export interface ResolvedAsset {
 }
 
 export interface ArticleAuthor {
+  // Missing for overridden bylines, which aren't tied to a contributor
+  contributorId?: string
   byline: string
 }
 
@@ -114,4 +116,16 @@ export interface ArticleListResponse {
   articles: ArticleCard[]
   cursor: string | null
   numResults: number
+}
+
+export interface AuthorProfile {
+  id: string
+  byline: string
+  title?: string
+  image?: string
+}
+
+// `author` is only included on the first page (no cursor)
+export interface AuthorResponse extends ArticleListResponse {
+  author: AuthorProfile | null
 }

@@ -1,4 +1,4 @@
-import { buildFeaturedImageUrl, buildImageUrl } from './image'
+import { buildAvatarUrl, buildFeaturedImageUrl, buildImageUrl } from './image'
 import type {
   RawArticle,
   RawBodyItem,
@@ -16,7 +16,8 @@ import type {
   VideoAssetData,
   ResolvedAsset,
   ArticleCard,
-  ArticleListResponse
+  ArticleListResponse,
+  AuthorProfile
 } from '#shared/types'
 
 function removeClassAttributes(html: string): string {
@@ -113,7 +114,10 @@ function transformArticle(rawArticle: RawArticle): Article {
   const authors: ArticleAuthor[] =
     rawArticle.isBylineOverridden && rawArticle.bylineOverrideV2
       ? [{ byline: rawArticle.bylineOverrideV2 }]
-      : rawArticle.contributors.map((c) => ({ byline: c.contributor.byline }))
+      : rawArticle.contributors.map((c) => ({
+          contributorId: c.contributor.id,
+          byline: c.contributor.byline
+        }))
 
   const ssts: ArticleSsts = { section: rawArticle.ssts.section }
 
@@ -152,7 +156,7 @@ export function safeTransformArticle(rawData: unknown): Article | null {
 
 export function transformArticleCard(raw: any): ArticleCard {
   const authors: ArticleAuthor[] = (raw.contributors ?? [])
-    .map((c: any) => ({ byline: c.contributor?.byline ?? '' }))
+    .map((c: any) => ({ contributorId: c.contributorId, byline: c.contributor?.byline ?? '' }))
     .filter((a: ArticleAuthor) => a.byline)
 
   return {
@@ -173,5 +177,15 @@ export function transformArticleList(raw: any): ArticleListResponse {
     articles: (raw.assets ?? []).map(transformArticleCard),
     cursor: raw.cursor ?? null,
     numResults: raw.numResults ?? 0
+  }
+}
+
+export function transformAuthor(raw: any): AuthorProfile {
+  const crops = raw.profileImage?.crops ?? []
+  return {
+    id: raw.id,
+    byline: raw.byline ?? '',
+    title: raw.reporterBioTitle || undefined,
+    image: crops.length ? buildAvatarUrl(crops) : undefined
   }
 }

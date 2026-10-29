@@ -1,5 +1,6 @@
 <template>
-  <NuxtLink :to="`/article/${article.id}`" class="group flex flex-col gap-3">
+  <!-- The headline link stretches over the whole card; byline links sit above it (z-10) -->
+  <article class="group relative flex flex-col gap-3">
     <div class="aspect-video overflow-hidden rounded-sm bg-stone-200">
       <img
         v-if="article.featuredImage"
@@ -18,26 +19,26 @@
       <h2
         class="font-serif text-[1.05rem] font-semibold leading-snug text-stone-900 group-hover:text-brand-600 transition-colors duration-200"
       >
-        {{ article.headline }}
+        <NuxtLink :to="`/article/${article.id}`" class="after:absolute after:inset-0">
+          {{ article.headline }}
+        </NuxtLink>
       </h2>
       <p v-if="article.promoBrief" class="text-sm text-stone-500 line-clamp-2 leading-relaxed">
         {{ article.promoBrief }}
       </p>
       <div class="flex items-center gap-1.5 text-xs text-stone-400 mt-0.5">
-        <span v-if="byline">{{ byline }}</span>
-        <span v-if="byline" class="text-stone-300">·</span>
+        <AuthorByline v-if="article.authors.length" :authors="article.authors" />
+        <span v-if="article.authors.length" class="text-stone-300">·</span>
         <time :datetime="article.publishDate">{{ formattedDate }}</time>
       </div>
     </div>
-  </NuxtLink>
+  </article>
 </template>
 
 <script setup lang="ts">
 import type { ArticleCard } from '#shared/types'
 
 const props = defineProps<{ article: ArticleCard }>()
-
-const byline = computed(() => props.article.authors.map((a) => a.byline).join(', '))
 
 const formattedDate = computed(() => formatDate(props.article.publishDate))
 </script>

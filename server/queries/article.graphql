@@ -7,6 +7,7 @@ query Article($id: String!) {
     bylineOverrideV2
     contributors {
       contributor {
+        id
         byline
       }
     }

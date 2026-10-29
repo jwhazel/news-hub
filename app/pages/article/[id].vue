@@ -15,7 +15,7 @@
       :headline="data.headline"
       :sub-head="data.subHead"
       :section="data.ssts.section"
-      :byline="byline"
+      :authors="data.authors"
       :date="data.publishDate"
     />
 
@@ -45,8 +45,6 @@ const route = useRoute()
 const { id } = route.params
 
 const { data, error, pending } = await useFetch<Article>(`/api/get-article/${id}`)
-
-const byline = computed(() => data.value?.authors.map((a) => a.byline).join(', ') ?? '')
 
 const featuredImagePath = computed(() => data.value?.featuredImage?.path ?? null)
 

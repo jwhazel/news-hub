@@ -1,0 +1,36 @@
+query Author(
+  $id: String!
+  $siteCodes: [String!]
+  $size: Int
+  $cursor: String
+  $withProfile: Boolean!
+) {
+  contributor(id: $id) @include(if: $withProfile) {
+    id
+    byline
+    reporterBioTitle
+    profileImage {
+      ... on image {
+        crops {
+          name
+          path
+          width
+          height
+        }
+      }
+    }
+  }
+  searchAssetsByContributorIDs(
+    contributor_ids: [$id]
+    site_codes: $siteCodes
+    types: ["text"]
+    size: $size
+    cursor: $cursor
+  ) {
+    numResults
+    cursor
+    assets {
+      ...CardFields
+    }
+  }
+}

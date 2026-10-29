@@ -9,6 +9,7 @@ fragment CardFields on Asset {
   }
   contributors {
     ... on BaseContributors {
+      contributorId
       contributor {
         byline
       }

@@ -5,11 +5,10 @@
     </div>
 
     <template v-else>
-      <!-- Featured article -->
-      <NuxtLink
+      <!-- Featured article (headline link stretches over the block, like ArticleCard) -->
+      <article
         v-if="featured"
-        :to="`/article/${featured.id}`"
-        class="group grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10 mb-12 pb-12 border-b border-stone-200"
+        class="group relative grid grid-cols-1 md:grid-cols-5 gap-6 md:gap-10 mb-12 pb-12 border-b border-stone-200"
       >
         <div class="md:col-span-3 overflow-hidden rounded-sm bg-stone-200 aspect-video">
           <img
@@ -29,18 +28,20 @@
           <h2
             class="font-serif text-2xl md:text-3xl font-semibold leading-tight text-stone-900 group-hover:text-brand-600 transition-colors duration-200"
           >
-            {{ featured.headline }}
+            <NuxtLink :to="`/article/${featured.id}`" class="after:absolute after:inset-0">
+              {{ featured.headline }}
+            </NuxtLink>
           </h2>
           <p class="text-stone-500 leading-relaxed text-sm md:text-base line-clamp-3">
             {{ featured.promoBrief }}
           </p>
           <div class="flex items-center gap-1.5 text-xs text-stone-400 mt-1">
-            <span v-if="featuredByline">{{ featuredByline }}</span>
-            <span v-if="featuredByline" class="text-stone-300">·</span>
+            <AuthorByline v-if="featured.authors.length" :authors="featured.authors" />
+            <span v-if="featured.authors.length" class="text-stone-300">·</span>
             <time :datetime="featured.publishDate">{{ formatDate(featured.publishDate) }}</time>
           </div>
         </div>
-      </NuxtLink>
+      </article>
 
       <!-- Article grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-10">
@@ -91,8 +92,6 @@ const loadingMore = ref(false)
 
 const featured = computed(() => articles.value[0] ?? null)
 const rest = computed(() => articles.value.slice(1))
-
-const featuredByline = computed(() => featured.value?.authors.map((a) => a.byline).join(', ') ?? '')
 
 async function loadMore() {
   if (!cursor.value || loadingMore.value) return

@@ -22,19 +22,21 @@
     </p>
 
     <div class="flex items-center justify-center gap-2 mt-6 text-sm text-stone-400">
-      <span v-if="byline" class="font-medium text-stone-600">{{ byline }}</span>
-      <span v-if="byline && date" class="text-stone-300">·</span>
+      <AuthorByline v-if="authors?.length" :authors="authors" class="font-medium text-stone-600" />
+      <span v-if="authors?.length && date" class="text-stone-300">·</span>
       <time v-if="date" :datetime="date">{{ formattedDate }}</time>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
+import type { ArticleAuthor } from '#shared/types'
+
 interface Props {
   headline: string
   subHead?: string
   section?: string
-  byline?: string
+  authors?: ArticleAuthor[]
   date?: string
 }
 
