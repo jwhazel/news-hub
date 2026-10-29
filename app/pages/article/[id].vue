@@ -48,12 +48,7 @@ const { data, error, pending } = await useFetch<Article>(`/api/get-article/${id}
 
 const byline = computed(() => data.value?.authors.map((a) => a.byline).join(', ') ?? '')
 
-const featuredImagePath = computed(
-  () =>
-    data.value?.featuredImage?.crops?.find((c) => c.name === '16_9')?.path ??
-    data.value?.featuredImage?.crops?.[0]?.path ??
-    null
-)
+const featuredImagePath = computed(() => data.value?.featuredImage?.path ?? null)
 
 useHead(() => ({
   title: data.value?.headline ?? 'Article'

@@ -1,5 +1,25 @@
 type Crop = { name: string; path: string; width?: number; height?: number }
 
+function toMediaUrl(path: string, mediaBaseUrl: string): string {
+  return path.replace('https://www.gannett-cdn.com', `${mediaBaseUrl}/gcdn`)
+}
+
+/**
+ * Featured images (article grid, home lead, article hero) reuse the desktop site's exact
+ * transform so requests can share its Fastly cache: the 16_9 crop's own `crop=` params
+ * followed by a fixed 1320x740 output, e.g.
+ *   .../84323002007-x.jpg?crop=3996,2249,x2,y121&width=1320&height=740&format=pjpg&auto=webp
+ * Falls back to buildImageUrl when there is no 16_9 crop.
+ */
+export function buildFeaturedImageUrl(crops: Crop[]): string {
+  const { mediaBaseUrl } = useRuntimeConfig()
+
+  const crop = crops.find((c) => c.name === '16_9')
+  if (!crop?.path.includes('?crop=')) return buildImageUrl(crops)
+
+  return `${toMediaUrl(crop.path, mediaBaseUrl)}&width=1320&height=740&format=pjpg&auto=webp`
+}
+
 /**
  * Transforms a Gannett CDN crops array into a Fastly Image Optimizer URL.
  *
@@ -24,8 +44,7 @@ export function buildImageUrl(
   const bestCrop = crops.find((c) => c.name === 'bestCrop') ?? crops[0]
   if (!bestCrop?.path) return ''
 
-  const base = bestCrop.path.split('?')[0]
-  const transformed = base.replace('https://www.gannett-cdn.com', `${mediaBaseUrl}/gcdn`)
+  const transformed = toMediaUrl(bestCrop.path.split('?')[0], mediaBaseUrl)
 
   const nativeW = bestCrop.width ?? 0
   const nativeH = bestCrop.height ?? 0
