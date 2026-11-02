@@ -95,6 +95,11 @@ describe('buildImageUrl', () => {
     expect(buildImageUrl(photo)).toBe(sized(Number(w), Number(h)))
   })
 
+  it('matches desktop sizing for a vertical inline photo (92367272007)', () => {
+    const photo = [{ name: 'bestCrop', path: crops[0]!.path, width: 990, height: 1024 }]
+    expect(buildImageUrl(photo, 'vertical')).toBe(sized(600, 622))
+  })
+
   it('keeps small images at their native size', () => {
     const small = [{ name: 'bestCrop', path: `${crops[0]!.path}`, width: 400, height: 300 }]
     expect(buildImageUrl(small)).toBe(sized(400, 300))

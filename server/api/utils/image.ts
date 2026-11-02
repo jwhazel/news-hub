@@ -52,15 +52,14 @@ function buildNamedCropUrl(
  * Inline (non-gallery):
  *   - bestCrop native width < 600 → use native dimensions as-is
  *   - orientation "vertical"      → width=600, height proportional to bestCrop
- *   - otherwise                   → width=1320, height proportional to bestCrop (rounded as below)
+ *   - otherwise                   → width=1320, height proportional to bestCrop
  *
  * Gallery:
  *   - orientation "vertical"      → height=1320, width proportional to bestCrop
  *   - otherwise                   → width=1320, height proportional to bestCrop
  *
- * For 1320 images the proportional edge matches the desktop site: computed at 1x (660),
+ * The proportional edge matches the desktop site: computed at 1x (half the fixed edge),
  * rounded up, then doubled, so it is always even (e.g. 1320x880.08 → 1320x882).
- * Vertical inline images still round normally; no desktop examples confirm them yet.
  */
 export function buildImageUrl(
   crops: Crop[],
@@ -94,7 +93,7 @@ export function buildImageUrl(
       h = nativeH
     } else if (orientation === 'vertical') {
       w = 600
-      h = nativeW && nativeH ? Math.round(600 * (nativeH / nativeW)) : 800
+      h = nativeW && nativeH ? retinaEdge(600, nativeH, nativeW) : 800
     } else {
       w = 1320
       h = nativeW && nativeH ? retinaEdge(1320, nativeH, nativeW) : 743
