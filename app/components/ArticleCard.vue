@@ -4,7 +4,7 @@
     <div class="aspect-video overflow-hidden rounded-sm bg-stone-200">
       <img
         v-if="article.featuredImage"
-        :src="article.featuredImage.path"
+        :src="article.featuredImage.thumbnail"
         :alt="article.headline"
         class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />

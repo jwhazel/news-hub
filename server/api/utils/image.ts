@@ -1,18 +1,28 @@
 type Crop = { name: string; path: string; width?: number; height?: number }
 
+/** `edge * a / b` worked out at 1x, rounded up, then doubled. Multiplies before dividing so exact ratios stay exact. */
+function retinaEdge(edge: number, a: number, b: number): number {
+  return Math.ceil(((edge / 2) * a) / b) * 2
+}
+
 function toMediaUrl(path: string, mediaBaseUrl: string): string {
   return path.replace('https://www.gannett-cdn.com', `${mediaBaseUrl}/gcdn`)
 }
 
 /**
- * Featured images (article grid, home lead, article hero) reuse the desktop site's exact
- * transform so requests can share its Fastly cache: the 16_9 crop's own `crop=` params
- * followed by a fixed 1320x740 output, e.g.
+ * Featured images (home lead, article hero) and card thumbnails reuse the desktop site's
+ * exact transforms so requests can share its Fastly cache: the 16_9 crop's own `crop=`
+ * params followed by a fixed output size, e.g.
  *   .../84323002007-x.jpg?crop=3996,2249,x2,y121&width=1320&height=740&format=pjpg&auto=webp
- * Falls back to buildImageUrl when there is no 16_9 crop.
+ *   .../92477160007-x.JPG?crop=5087,2863,x0,y264&width=320&height=180&format=pjpg&auto=webp
+ * Both fall back to buildImageUrl when there is no 16_9 crop.
  */
 export function buildFeaturedImageUrl(crops: Crop[]): string {
   return buildNamedCropUrl(crops, '16_9', 1320, 740) ?? buildImageUrl(crops)
+}
+
+export function buildThumbnailUrl(crops: Crop[]): string {
+  return buildNamedCropUrl(crops, '16_9', 320, 180) ?? buildImageUrl(crops)
 }
 
 /** Square author headshot from the 1_1 crop, sized for a 96px avatar at 2x. */
@@ -47,6 +57,8 @@ function buildNamedCropUrl(
  * Gallery:
  *   - orientation "vertical"      → height=1320, width proportional to bestCrop
  *   - otherwise                   → width=1320, height proportional to bestCrop
+ *   The proportional edge matches the desktop site: computed at 1x (660), rounded up, then
+ *   doubled, so it is always even (e.g. 1320x880.08 → 1320x882).
  */
 export function buildImageUrl(
   crops: Crop[],
@@ -69,10 +81,10 @@ export function buildImageUrl(
   if (context === 'gallery') {
     if (orientation === 'vertical') {
       h = 1320
-      w = nativeW && nativeH ? Math.round(1320 * (nativeW / nativeH)) : 1320
+      w = nativeW && nativeH ? retinaEdge(1320, nativeW, nativeH) : 1320
     } else {
       w = 1320
-      h = nativeW && nativeH ? Math.round(1320 * (nativeH / nativeW)) : 743
+      h = nativeW && nativeH ? retinaEdge(1320, nativeH, nativeW) : 743
     }
   } else {
     if (nativeW > 0 && nativeW < 600) {

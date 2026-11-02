@@ -6,7 +6,11 @@ import {
   transformArticleList,
   transformAuthor
 } from '../../server/api/utils/schema'
-import { buildFeaturedImageUrl, buildImageUrl } from '../../server/api/utils/image'
+import {
+  buildFeaturedImageUrl,
+  buildImageUrl,
+  buildThumbnailUrl
+} from '../../server/api/utils/image'
 import { article, assets, author, card, crops } from '../fixtures/content-api'
 
 beforeEach(() => {
@@ -22,7 +26,7 @@ describe('transformArticleCard', () => {
       publishDate: '2026-10-28T20:00:39Z',
       ssts: { section: 'sports' },
       authors: [{ contributorId: author.id, byline: author.byline }],
-      featuredImage: { path: buildFeaturedImageUrl(crops) }
+      featuredImage: { path: buildFeaturedImageUrl(crops), thumbnail: buildThumbnailUrl(crops) }
     })
   })
 
@@ -94,7 +98,7 @@ describe('resolveAsset', () => {
     })
   })
 
-  it('resolves galleries, preferring caption overrides and dropping photos without crops', () => {
+  it('resolves galleries, preferring plain-text caption overrides and dropping photos without crops', () => {
     expect(resolveAsset('201', assets[201])).toEqual({
       assetType: 'gallery',
       id: '201',
@@ -106,7 +110,7 @@ describe('resolveAsset', () => {
           {
             id: '210',
             path: buildImageUrl(crops, 'horizontal', 'gallery'),
-            caption: 'Override caption',
+            caption: "Paxton rallied area Republicans & voters' hopes.",
             credit: 'Photographer Byline'
           }
         ]

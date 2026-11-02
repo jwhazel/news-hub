@@ -1,4 +1,4 @@
-import { buildAvatarUrl, buildFeaturedImageUrl, buildImageUrl } from './image'
+import { buildAvatarUrl, buildFeaturedImageUrl, buildImageUrl, buildThumbnailUrl } from './image'
 import type {
   RawArticle,
   RawBodyItem,
@@ -19,6 +19,29 @@ import type {
   ArticleListResponse,
   AuthorProfile
 } from '#shared/types'
+
+const ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' '
+}
+
+// Gallery caption overrides are rich text (<p>, <a>); captions render as plain text
+function stripHtml(html: string): string {
+  return html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&(#x[\da-f]+|#\d+|[a-z]+);/gi, (entity, code: string) => {
+      if (code[0] !== '#') return ENTITIES[code.toLowerCase()] ?? entity
+      const point =
+        code[1]?.toLowerCase() === 'x' ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10)
+      return String.fromCodePoint(point)
+    })
+    .replace(/\s+/g, ' ')
+    .trim()
+}
 
 function removeClassAttributes(html: string): string {
   return html.replace(/\s+class\s*=\s*["'][^"']*["']/gi, '')
@@ -50,7 +73,7 @@ export function resolveAsset(id: string, raw: any): ResolvedAsset {
           return {
             id: img?.id ?? '',
             path: buildImageUrl(img.crops, img?.orientation ?? 'horizontal', 'gallery'),
-            caption: item.overrides?.caption || img?.caption || undefined,
+            caption: stripHtml(item.overrides?.caption || img?.caption || '') || undefined,
             credit: img?.credit || img?.byline || undefined
           }
         })
@@ -167,7 +190,10 @@ export function transformArticleCard(raw: any): ArticleCard {
     ssts: { section: raw.ssts?.section ?? '' },
     authors,
     featuredImage: raw.links?.photo?.crops?.length
-      ? { path: buildFeaturedImageUrl(raw.links.photo.crops) }
+      ? {
+          path: buildFeaturedImageUrl(raw.links.photo.crops),
+          thumbnail: buildThumbnailUrl(raw.links.photo.crops)
+        }
       : undefined
   }
 }

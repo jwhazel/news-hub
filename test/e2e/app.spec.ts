@@ -43,6 +43,9 @@ describe('server api', () => {
       featuredImage: {
         path: expect.stringMatching(
           /^https:\/\/media\.test\/gcdn\/.+\?crop=5624,3164,x0,y0&width=1320&height=740&format=pjpg&auto=webp$/
+        ),
+        thumbnail: expect.stringMatching(
+          /\?crop=5624,3164,x0,y0&width=320&height=180&format=pjpg&auto=webp$/
         )
       }
     })
@@ -154,6 +157,9 @@ describe('pages', () => {
     expect(html).toContain('Headline 1')
     expect(html).toContain('href="/article/1"')
     expect(html).toContain('href="/author/9244336002"')
+    // Lead story uses the 1320x740 image, grid cards the 320x180 thumbnail
+    expect(html).toContain('width=1320&amp;height=740')
+    expect(html).toContain('width=320&amp;height=180')
   })
 
   it('server-renders an article with its embeds', async () => {

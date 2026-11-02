@@ -94,7 +94,11 @@ export const assets: Record<string, Record<string, unknown>> = {
       photo: { crops },
       assets: [
         {
-          overrides: { caption: 'Override caption' },
+          // Overrides are rich text; real example from gallery 91853589007
+          overrides: {
+            caption:
+              '<p style="margin: 0px;">Paxton rallied <a target="_blank" href="https://www.usatoday.com/story/">area Republicans</a> &amp; voters&#39; hopes.</p>'
+          },
           asset: {
             id: '210',
             crops,

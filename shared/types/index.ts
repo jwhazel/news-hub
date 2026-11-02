@@ -109,7 +109,8 @@ export interface ArticleCard {
   publishDate: string
   ssts: ArticleSsts
   authors: ArticleAuthor[]
-  featuredImage?: { path: string }
+  // path is 1320x740 (home lead story), thumbnail is 320x180 (grid cards)
+  featuredImage?: { path: string; thumbnail: string }
 }
 
 export interface ArticleListResponse {

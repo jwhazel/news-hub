@@ -12,7 +12,10 @@ const article: ArticleCardData = {
   publishDate: new Date(Date.now() - 2 * 3600 * 1000).toISOString(),
   ssts: { section: 'sports' },
   authors: [{ contributorId: '9244336002', byline: 'Ryan Black' }, { byline: 'Staff report' }],
-  featuredImage: { path: 'https://media.test/photo.jpg?width=1320&height=740' }
+  featuredImage: {
+    path: 'https://media.test/photo.jpg?width=1320&height=740',
+    thumbnail: 'https://media.test/photo.jpg?width=320&height=180'
+  }
 }
 
 describe('AuthorByline', () => {
@@ -31,7 +34,7 @@ describe('ArticleCard', () => {
     const wrapper = await mountSuspended(ArticleCard, { props: { article } })
     expect(wrapper.get('h2 a').attributes('href')).toBe('/article/100')
     expect(wrapper.get('h2').text()).toBe(article.headline)
-    expect(wrapper.get('img').attributes('src')).toBe(article.featuredImage!.path)
+    expect(wrapper.get('img').attributes('src')).toBe(article.featuredImage!.thumbnail)
     expect(wrapper.text()).toContain('sports')
     expect(wrapper.text()).toContain('Milan Momcilovic led the way')
     expect(wrapper.get('time').text()).toBe('2 hours ago')
