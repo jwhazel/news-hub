@@ -84,6 +84,17 @@ describe('buildImageUrl', () => {
     expect(buildImageUrl(photo, orientation, 'gallery')).toBe(sized(Number(w), Number(h)))
   })
 
+  // Article 92560474007: bestCrop sizes and the sizes the desktop site requests for them
+  it.each([
+    [5088, 3392, '1320x880'],
+    [2400, 1704, '1320x938'],
+    [5397, 3600, '1320x882']
+  ])('matches desktop inline sizing for a %ix%i photo', (width, height, size) => {
+    const [w, h] = size.split('x')
+    const photo = [{ name: 'bestCrop', path: crops[0]!.path, width, height }]
+    expect(buildImageUrl(photo)).toBe(sized(Number(w), Number(h)))
+  })
+
   it('keeps small images at their native size', () => {
     const small = [{ name: 'bestCrop', path: `${crops[0]!.path}`, width: 400, height: 300 }]
     expect(buildImageUrl(small)).toBe(sized(400, 300))
