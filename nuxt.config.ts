@@ -1,3 +1,5 @@
+import { graphqlString } from './config/graphql-string'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
@@ -18,17 +20,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     rollupConfig: {
-      plugins: [
-        // Import server/queries/*.graphql files as plain strings
-        {
-          name: 'graphql-string',
-          transform(code: string, id: string) {
-            if (id.endsWith('.graphql')) {
-              return { code: `export default ${JSON.stringify(code)}`, map: null }
-            }
-          }
-        }
-      ]
+      plugins: [graphqlString()]
     }
   },
   routeRules: {
